@@ -1,42 +1,33 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import ItemDetail from "./ItemDetail";
 
-
-const products = [
-  { id: '1', name: 'Auto eléctrico', category: 'vehiculos', description: 'Un auto eléctrico moderno.' },
-  { id: '2', name: 'Bicicleta', category: 'vehiculos', description: 'Bicicleta de montaña resistente.' },
-  { id: '3', name: 'Smartphone', category: 'electronica', description: 'Smartphone de última generación.' },
-  { id: '4', name: 'Laptop', category: 'electronica', description: 'Laptop potente para profesionales.' },
+const productsData = [
+  { id: "1", name: "Auto eléctrico", category: "vehiculos", price: 10000 },
+  { id: "2", name: "Bicicleta", category: "vehiculos", price: 500 },
+  { id: "3", name: "Smartphone", category: "electronica", price: 800 },
+  { id: "4", name: "Laptop", category: "electronica", price: 1200 },
 ];
-
 
 const getProductById = (id) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(products.find(p => p.id === id));
+      resolve(productsData.find((p) => p.id === id));
     }, 500);
   });
 };
 
-function ItemDetailContainer() {
+const ItemDetailContainer = () => {
   const { itemId } = useParams();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    getProductById(itemId).then(data => {
+    getProductById(itemId).then((data) => {
       setProduct(data);
     });
   }, [itemId]);
 
-  if (!product) return <p>Cargando producto...</p>;
-
-  return (
-    <div>
-      <h2>{product.name}</h2>
-      <p>Categoría: {product.category}</p>
-      <p>Descripción: {product.description}</p>
-    </div>
-  );
-}
+  return <div>{product && <ItemDetail product={product} />}</div>;
+};
 
 export default ItemDetailContainer;

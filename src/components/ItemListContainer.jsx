@@ -1,49 +1,42 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import ItemList from "./ItemList";
 
-const products = [
-  { id: '1', name: 'Auto eléctrico', category: 'vehiculos' },
-  { id: '2', name: 'Bicicleta', category: 'vehiculos' },
-  { id: '3', name: 'Smartphone', category: 'electronica' },
-  { id: '4', name: 'Laptop', category: 'electronica' },
+const productsData = [
+  { id: "1", name: "Auto eléctrico", category: "vehiculos", price: 10000 },
+  { id: "2", name: "Bicicleta", category: "vehiculos", price: 500 },
+  { id: "3", name: "Smartphone", category: "electronica", price: 800 },
+  { id: "4", name: "Laptop", category: "electronica", price: 1200 },
 ];
 
 const getProducts = (categoryId) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       if (categoryId) {
-        resolve(products.filter(p => p.category === categoryId));
+        resolve(productsData.filter((p) => p.category === categoryId));
       } else {
-        resolve(products);
+        resolve(productsData);
       }
     }, 500);
   });
 };
 
-function ItemListContainer({ greeting }) {
+const ItemListContainer = ({ greeting }) => {
   const { categoryId } = useParams();
-  const [items, setItems] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    getProducts(categoryId).then(data => {
-      setItems(data);
+    getProducts(categoryId).then((data) => {
+      setProducts(data);
     });
   }, [categoryId]);
 
   return (
     <div>
       <h1>{greeting}</h1>
-      <p>{categoryId ? `Showing products in category: ${categoryId}` : 'Showing all products'}</p>
-
-        <ul>
-          {items.map(item => (
-          <li key={item.id}>
-            <Link to={`/item/${item.id}`}>{item.name}</Link>
-          </li>
-          ))}
-        </ul>
+      <ItemList products={products} />
     </div>
   );
-}
+};
 
 export default ItemListContainer;
